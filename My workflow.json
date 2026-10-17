@@ -1,0 +1,362 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "e17fd2bb-4457-4a5d-81a4-9f67a1e68330",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7e953366-86a0-4d87-b212-ef929c186e9c",
+              "name": "clientName",
+              "value": "Ali",
+              "type": "string"
+            },
+            {
+              "id": "8eeda636-9bb6-40c9-b93f-09fe7c893e9c",
+              "name": "projectType",
+              "value": "Landing page",
+              "type": "string"
+            },
+            {
+              "id": "22ecbb86-f130-4f53-9923-345480774def",
+              "name": "budget",
+              "value": 300,
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        224,
+        0
+      ],
+      "id": "13c592ae-ac14-4b64-8485-3043b165a67f",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "e9784118-9563-4633-83b5-49ed5672e951",
+              "leftValue": "={{$json.budget}}",
+              "rightValue": 500,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        448,
+        0
+      ],
+      "id": "0d053bc5-7740-448a-8609-d9407201590e",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ea47049d-98f1-4236-afaf-87da9379cc44",
+              "name": "leadStatus",
+              "value": "Qualified",
+              "type": "string"
+            },
+            {
+              "id": "3d0df6c6-3259-43c2-a939-0c2b234f8b63",
+              "name": "nextAction",
+              "value": "Prepare a tailored proposal",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        672,
+        -96
+      ],
+      "id": "d3315696-8488-4381-a529-66f3a52b6c35",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "bafd3190-a43c-403d-9ba9-337422796b3b",
+              "name": "leadStatus",
+              "value": "Needs review",
+              "type": "string"
+            },
+            {
+              "id": "6c74d1c9-735e-4bc4-929b-eaa6b363d5b0",
+              "name": "nextAction",
+              "value": "Review the budget before replying",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        672,
+        96
+      ],
+      "id": "d354790b-80d8-4d92-b65b-27c994616dae",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "formTitle": "Project Inquiry",
+        "formDescription": "Tell me about the project you need help with.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Your name",
+              "fieldName": "clientName",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Email",
+              "fieldName": "email",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "project type",
+              "fieldType": "dropdown",
+              "fieldName": "projectType",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Website"
+                  },
+                  {
+                    "option": "Automation"
+                  },
+                  {
+                    "option": "Other"
+                  }
+                ]
+              }
+            },
+            {
+              "fieldLabel": "Budget",
+              "fieldType": "number",
+              "fieldName": "budget",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Project details",
+              "fieldType": "textarea",
+              "fieldName": "projectDetails"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        144,
+        144
+      ],
+      "id": "a044acb9-346e-4bfd-b94b-5a71ba4d3399",
+      "name": "On form submission",
+      "webhookId": "4c125a17-30f2-4613-b746-736b7d6a4a98"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Write a short, friendly reply to this project inquiry.\nName: {{$json.clientName}}\nProject type: {{$json.projectType}}\nBudget: {{$json.budget}}\nDetails: {{$json.projectDetails}}\n\nKeep the reply warm and professional. Don’t confirm that the budget is suitable, promise a price or timeline, or claim the work has been accepted. Ask one useful follow-up question. This is a draft for a human to review.\n\nReturn only the email body. Do not include a subject line.\n\nSign off as Maheen Fatima. Do not use placeholders such as [Your Name].",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        896,
+        -96
+      ],
+      "id": "493d744e-ac3c-40a0-980e-d6e66fea3a4b",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatDeepSeek",
+      "typeVersion": 1,
+      "position": [
+        832,
+        112
+      ],
+      "id": "f04f440d-5d22-4411-b5d3-5c83b6d2ad36",
+      "name": "DeepSeek Chat Model",
+      "credentials": {
+        "deepSeekApi": {
+          "id": "37lPbhVVvbxdt84A",
+          "name": "DeepSeek account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "subject": "Project inquiry follow-up",
+        "message": "={{ $json.text }}",
+        "options": {
+          "sendTo": "={{ $('On form submission').item.json.email }}"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1264,
+        -96
+      ],
+      "id": "5e44e50b-4470-4166-8a89-65194c779a13",
+      "name": "Create a draft",
+      "webhookId": "afd33217-1e00-4dcb-ac41-4138484320bc",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "QmChT9fzeAOtjloS",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DeepSeek Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Create a draft",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "23c656e7-93a2-48ad-8091-03a7679f97ef",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "34510b62b718f8b08ed8bfe0968fa53f6672bef52b8fc20e10d2cd3caa7f8ad7"
+  },
+  "nodeGroups": [],
+  "id": "FXGspKFzZkrevsJj",
+  "tags": []
+}
